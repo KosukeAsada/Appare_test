@@ -1,5 +1,5 @@
 import { Img, staticFile, useCurrentFrame, useVideoConfig, interpolate } from "remotion";
-import { DEFAULT_CHARACTERS, CharacterId } from "../config";
+import { DEFAULT_CHARACTERS, CharacterId, USE_CHARACTER_IMAGES } from "../config";
 
 interface CharacterProps {
   characterId: CharacterId;
@@ -44,8 +44,8 @@ export const Character: React.FC<CharacterProps> = ({
     ? characterConfig.images.mouthOpen
     : characterConfig.images.mouthClose;
 
-  // 画像が存在するかチェック（try-catchでフォールバック）
-  const hasImage = characterConfig.images.mouthOpen && characterConfig.images.mouthClose;
+  // USE_CHARACTER_IMAGESフラグと画像パスの存在をチェック
+  const hasImage = USE_CHARACTER_IMAGES && characterConfig.images.mouthOpen && characterConfig.images.mouthClose;
 
   return (
     <div
