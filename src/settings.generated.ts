@@ -38,12 +38,21 @@ export const SETTINGS = {
     "background": "#ffffff",
     "text": "#ffffff",
     "zundamon": "#228B22",
-    "metan": "#FF1493"
+    "gaoyan": "#FF1493",
+    "blackboardVideo": "appare_bg_proxy.mp4"
   }
 } as const;
 
 // キャラクターごとの利用可能な画像ファイル
 export const AVAILABLE_IMAGES: Record<string, string[]> = {
+  "gaoyan": [
+    "mouth_close.png",
+    "mouth_open.png"
+  ],
+  "kuro_zunda": [
+    "mouth_close.png",
+    "mouth_open.png"
+  ],
   "metan": [
     "mouth_close.png",
     "mouth_open.png"

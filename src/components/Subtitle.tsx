@@ -54,7 +54,7 @@ export const Subtitle: React.FC<SubtitleProps> = ({ text, character }) => {
   });
 
   // キャラクター色を取得
-  const characterColor = character === "zundamon" ? colors.zundamon : colors.metan;
+  const characterColor = colors[character as keyof typeof colors] || colors.text;
 
   // フォント色の決定
   const getColor = (colorValue: string) => {

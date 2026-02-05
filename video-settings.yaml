@@ -99,4 +99,5 @@ colors:
   background: "#ffffff"    # 外側の白背景
   text: "#ffffff"          # 白文字
   zundamon: "#228B22"      # フォレストグリーン（暗め）
-  metan: "#FF1493"         # ディープピンク
+  gaoyan: "#FF1493"           # ディープピンク
+  blackboardVideo: "appare_bg_proxy.mp4" # 背景動画（軽量版）

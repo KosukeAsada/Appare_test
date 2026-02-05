@@ -91,8 +91,9 @@ async function synthesize(
 // WAVファイルの長さを取得（秒）
 function getWavDuration(filePath: string): number {
   try {
+    const safePath = filePath.replace(/\\/g, "/");
     const result = execSync(
-      `python3 -c "import wave; w=wave.open('${filePath}','r'); print(w.getnframes()/w.getframerate())"`,
+      `python3 -c "import wave; w=wave.open('${safePath}','r'); print(w.getnframes()/w.getframerate())"`,
       { encoding: "utf-8" }
     );
     return parseFloat(result.trim());
@@ -127,7 +128,7 @@ async function main() {
   const scriptData: ScriptLine[] = [];
   const characters: Map<string, number> = new Map([
     ["zundamon", 3],
-    ["metan", 2],
+    ["gaoyan", 2],
   ]);
 
   // script.tsを読み込んでパース
@@ -137,20 +138,40 @@ async function main() {
   );
 
   if (scriptDataMatch) {
-    // 簡易パース（本番ではAST解析を使用）
-    const dataStr = scriptDataMatch[1];
-    const lineMatches = dataStr.matchAll(
-      /\{\s*"?id"?:\s*(\d+),\s*"?character"?:\s*"([^"]+)",\s*"?text"?:\s*"([^"]+)"[\s\S]*?"?voiceFile"?:\s*"([^"]+)"/g
-    );
+    const dataStr = scriptDataMatch[1].trim();
+    // 簡易的なJSON化（末尾カンマの除去など）
+    try {
+      // JSON形式としてパースを試みる
+      const jsonStr = "[" + dataStr.replace(/,\s*$/, "").replace(/,\s*]/, "]") + "]";
+      const parsedData = JSON.parse(jsonStr);
+      for (const line of parsedData) {
+        scriptData.push({
+          id: line.id,
+          character: line.character,
+          text: line.text,
+          voiceFile: line.voiceFile,
+        });
+      }
+    } catch (e) {
+      console.warn("JSON.parse failed, falling back to regex parser...");
+      const lineMatches = dataStr.matchAll(
+        /\{\s*"?id"?:\s*(\d+),\s*"?character"?:\s*"([^"]+)",\s*"?text"?:\s*"([^"]+)"[\s\S]*?"?voiceFile"?:\s*"([^"]+)"/g
+      );
 
-    for (const match of lineMatches) {
-      scriptData.push({
-        id: parseInt(match[1]),
-        character: match[2],
-        text: match[3],
-        voiceFile: match[4],
-      });
+      for (const match of lineMatches) {
+        scriptData.push({
+          id: parseInt(match[1]),
+          character: match[2],
+          text: match[3],
+          voiceFile: match[4],
+        });
+      }
     }
+  }
+
+  if (scriptData.length === 0) {
+    console.error("セリフデータが見つかりませんでした。パースに失敗した可能性があります。");
+    process.exit(1);
   }
 
   console.log(`${scriptData.length}件のセリフを処理します...`);

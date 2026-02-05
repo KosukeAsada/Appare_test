@@ -8,8 +8,8 @@ zundamon:
   color: "#228B22"
   defaultPauseAfter: 15
 
-metan:
-  name: 四国めたん
+gaoyan:
+  name: ガオやん
   speakerId: 2
   position: left
   color: "#FF1493"
@@ -21,3 +21,4 @@ kuro_zunda:
   position: right
   color: "#333333"
   defaultPauseAfter: 15
+

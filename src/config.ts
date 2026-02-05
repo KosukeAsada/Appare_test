@@ -23,7 +23,7 @@ export const COLORS = {
 };
 
 // キャラクター定義
-export type CharacterId = "zundamon" | "metan";
+export type CharacterId = "zundamon" | "gaoyan";
 
 export interface CharacterConfig {
   id: CharacterId;
@@ -43,14 +43,14 @@ export interface CharacterConfig {
 // めたん: 左下、ずんだもん: 右下
 export const DEFAULT_CHARACTERS: CharacterConfig[] = [
   {
-    id: "metan",
-    name: "四国めたん",
+    id: "gaoyan",
+    name: "ガオやん",
     voicevoxSpeakerId: 2,
     position: "left",
     color: COLORS.metan,
     images: {
-      mouthOpen: "images/metan/mouth_open.png",
-      mouthClose: "images/metan/mouth_close.png",
+      mouthOpen: "images/gaoyan/mouth_open.png",
+      mouthClose: "images/gaoyan/mouth_close.png",
     },
     flipX: true, // 元画像が左向きなので右向きに反転
   },
@@ -71,7 +71,7 @@ export const DEFAULT_CHARACTERS: CharacterConfig[] = [
 // キャラクターIDからspeakerIdを取得するマップ
 export const characterSpeakerMap: Record<CharacterId, number> = {
   zundamon: 3,
-  metan: 2,
+  gaoyan: 2,
 };
 
 // シーン背景タイプ

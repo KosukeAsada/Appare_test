@@ -113,7 +113,7 @@ export const Character: React.FC<CharacterProps> = ({
           }}
         >
           <div style={{ fontSize: 48 }}>
-            {characterId === "zundamon" ? "🟢" : "🩷"}
+            {characterId === "zundamon" ? "🟢" : "🦁"}
           </div>
           <div
             style={{

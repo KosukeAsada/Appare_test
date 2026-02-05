@@ -63,45 +63,48 @@ export const scriptData: ScriptLine[] = [
   {
     "id": 1,
     "character": "zundamon",
-    "text": "ずんだもんなのだ！",
+    "text": "みんなー！MBSラジオで放送中の「まいどおおきに！！アッパレでーす！」を紹介するのだ！",
+    "displayText": "みんなー！MBSラジオで放送中の「まいどおおきに！！Appare!でーす！」を紹介するのだ！",
     "scene": 1,
     "pauseAfter": 15,
     "visual": {
       "type": "text",
-      "text": "Remotion × VOICEVOX\nテンプレート",
-      "fontSize": 80,
+      "text": "MBSラジオ\n「まいどおおきに！！Appare!でーす！」",
+      "fontSize": 60,
       "color": "#ffffff",
       "animation": "zoomIn"
     },
     "voiceFile": "01_zundamon.wav",
-    "durationInFrames": 53
+    "durationInFrames": 292
   },
   {
     "id": 2,
-    "character": "metan",
-    "text": "四国めたんです。",
+    "character": "gaoyan",
+    "text": "そうね。アイドルグループ「アッパレ」のメンバーが、賑やかにお送りするトーク番組よ。",
+    "displayText": "そうね。アイドルグループ「Appare!」のメンバーが、賑やかにお送りするトーク番組よ。",
     "scene": 1,
     "pauseAfter": 15,
-    "voiceFile": "02_metan.wav",
-    "durationInFrames": 44
+    "voiceFile": "02_gaoyan.wav",
+    "durationInFrames": 236
   },
   {
     "id": 3,
     "character": "zundamon",
-    "text": "このテンプレートで紹介動画が作れるのだ！",
+    "text": "新メンバー3人が加わって9人体制になったアッパレの、ラジオでしか聞けない素顔がたっぷりなのだ！",
+    "displayText": "新メンバー3人が加わって9人体制になったAppare!の、ラジオでしか聞けない素顔がたっぷりなのだ！",
     "scene": 1,
     "pauseAfter": 10,
     "voiceFile": "03_zundamon.wav",
-    "durationInFrames": 123
+    "durationInFrames": 284
   },
   {
     "id": 4,
-    "character": "metan",
-    "text": "よろしくね。",
+    "character": "gaoyan",
+    "text": "毎週の放送、私たちと一緒にチェックしていきましょう。",
     "scene": 1,
     "pauseAfter": 30,
-    "voiceFile": "04_metan.wav",
-    "durationInFrames": 31
+    "voiceFile": "04_gaoyan.wav",
+    "durationInFrames": 143
   }
 ];
 

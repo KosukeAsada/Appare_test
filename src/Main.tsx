@@ -1,7 +1,8 @@
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, Audio, Sequence, staticFile, Loop } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, Audio, Sequence, staticFile, Loop, Img, Video } from "remotion";
 import { loadFont } from "@remotion/google-fonts/MPLUSRounded1c";
 import { scriptData, scenes, ScriptLine, bgmConfig } from "./data/script";
-import { COLORS, VIDEO_CONFIG } from "./config";
+import { COLORS, VIDEO_CONFIG, DEFAULT_CHARACTERS } from "./config";
+import { SETTINGS } from "./settings.generated";
 import { Subtitle } from "./components/Subtitle";
 import { Character } from "./components/Character";
 import { SceneVisuals } from "./components/SceneVisuals";
@@ -75,8 +76,31 @@ export const Main: React.FC = () => {
           bottom: 160,
           background: COLORS.blackboard,
           borderRadius: 8,
+          overflow: "hidden", // 画像や動画がはみ出さないように
         }}
-      />
+      >
+        {"blackboardVideo" in SETTINGS.colors && SETTINGS.colors.blackboardVideo ? (
+          <Video
+            src={staticFile(`images/${SETTINGS.colors.blackboardVideo}`)}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover", // 枠いっぱいに広げる
+            }}
+            loop
+            muted // 背景動画として音は消す（必要ならBGMや音声と被るのを防ぐ）
+          />
+        ) : "blackboardImage" in SETTINGS.colors && SETTINGS.colors.blackboardImage ? (
+          <Img
+            src={staticFile(`images/${SETTINGS.colors.blackboardImage}`)}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover", // 枠いっぱいに広げる
+            }}
+          />
+        ) : null}
+      </div>
       {/* 黒板の茶色フチ（下部） */}
       <div
         style={{
@@ -133,16 +157,14 @@ export const Main: React.FC = () => {
       />
 
       {/* キャラクター */}
-      <Character
-        characterId="metan"
-        isSpeaking={isSpeaking && currentLine?.character === "metan"}
-        emotion={currentLine?.character === "metan" ? currentLine.emotion : "normal"}
-      />
-      <Character
-        characterId="zundamon"
-        isSpeaking={isSpeaking && currentLine?.character === "zundamon"}
-        emotion={currentLine?.character === "zundamon" ? currentLine.emotion : "normal"}
-      />
+      {DEFAULT_CHARACTERS.map((char) => (
+        <Character
+          key={char.id}
+          characterId={char.id}
+          isSpeaking={isSpeaking && currentLine?.character === char.id}
+          emotion={currentLine?.character === char.id ? currentLine.emotion : "normal"}
+        />
+      ))}
 
       {/* 字幕 */}
       {currentLine && (
