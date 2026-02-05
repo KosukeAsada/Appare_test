@@ -49,6 +49,15 @@ export const AVAILABLE_IMAGES: Record<string, string[]> = {
     "mouth_close.png",
     "mouth_open.png"
   ],
+  "imported": [
+    "260207_1.png",
+    "260207_2.png",
+    "260207_3.png",
+    "260207_4.png",
+    "260207_5.png",
+    "260207_6.png",
+    "260207_7.png"
+  ],
   "kuro_zunda": [
     "mouth_close.png",
     "mouth_open.png"

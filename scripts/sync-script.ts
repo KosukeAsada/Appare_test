@@ -11,6 +11,7 @@ import * as yaml from "yaml";
 
 const ROOT_DIR = process.cwd();
 const SCRIPT_YAML_PATH = path.join(ROOT_DIR, "config", "script.yaml");
+const SCENES_YAML_PATH = path.join(ROOT_DIR, "config", "scenes.yaml");
 const CHARACTERS_YAML_PATH = path.join(ROOT_DIR, "config", "characters.yaml");
 const DEFAULTS_YAML_PATH = path.join(ROOT_DIR, "config", "defaults.yaml");
 const OUTPUT_PATH = path.join(ROOT_DIR, "src", "data", "script.ts");
@@ -36,6 +37,7 @@ interface ScriptLine {
     src: string;
     volume?: number;
   };
+  duration?: number; // YAMLからの強制指定（秒）
 }
 
 interface CharacterConfig {
@@ -73,10 +75,12 @@ function main() {
 
   // Load YAML files
   const scriptYaml = fs.readFileSync(SCRIPT_YAML_PATH, "utf-8");
+  const scenesYaml = fs.existsSync(SCENES_YAML_PATH) ? fs.readFileSync(SCENES_YAML_PATH, "utf-8") : "[]";
   const charactersYaml = fs.readFileSync(CHARACTERS_YAML_PATH, "utf-8");
   const defaultsYaml = fs.readFileSync(DEFAULTS_YAML_PATH, "utf-8");
 
   const scriptData: ScriptLine[] = yaml.parse(scriptYaml) || [];
+  const scenesData: any[] = yaml.parse(scenesYaml) || [];
   const characters: Record<string, CharacterConfig> = yaml.parse(charactersYaml);
   const defaults: Defaults = yaml.parse(defaultsYaml);
 
@@ -99,7 +103,12 @@ function main() {
       : `${String(line.id).padStart(2, "0")}_${line.character}.wav`;
 
     // Get duration from durations.json or use default
-    const durationInFrames = durations[voiceFile] || defaults.newLine.durationInFrames;
+    let durationInFrames = durations[voiceFile] || defaults.newLine.durationInFrames;
+
+    // YAMLでduration（秒）が指定されている場合はそれを優先
+    if (line.duration) {
+      durationInFrames = Math.ceil(line.duration * 30); // 30fps想定
+    }
 
     return {
       ...line,
@@ -161,13 +170,11 @@ export interface SceneInfo {
   id: number;
   title: string;
   background: string;
+  backgroundImage?: string;
+  backgroundColor?: string; 
 }
 
-export const scenes: SceneInfo[] = [
-  { id: 1, title: "オープニング", background: "gradient" },
-  { id: 2, title: "メインコンテンツ", background: "solid" },
-  { id: 3, title: "エンディング", background: "gradient" },
-];
+export const scenes: SceneInfo[] = ${JSON.stringify(scenesData.length > 0 ? scenesData : [{ id: 1, title: "Default", background: "gradient" }], null, 2)};
 
 // このファイルは config/script.yaml から自動生成されます
 // 編集する場合は config/script.yaml を編集して npm run sync-script を実行してください

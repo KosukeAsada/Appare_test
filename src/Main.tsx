@@ -66,7 +66,7 @@ export const Main: React.FC = () => {
         fontFamily: "'Noto Sans JP', 'Hiragino Sans', sans-serif",
       }}
     >
-      {/* 黒板背景 */}
+      {/* 背景（シーンごとに切り替え） */}
       <div
         style={{
           position: "absolute",
@@ -74,33 +74,36 @@ export const Main: React.FC = () => {
           left: 60,
           right: 60,
           bottom: 160,
-          background: COLORS.blackboard,
+          background: sceneInfo.backgroundColor || COLORS.blackboard, // 指定がなければ黒板色
           borderRadius: 8,
-          overflow: "hidden", // 画像や動画がはみ出さないように
+          overflow: "hidden",
         }}
       >
-        {"blackboardVideo" in SETTINGS.colors && SETTINGS.colors.blackboardVideo ? (
-          <Video
-            src={staticFile(`images/${SETTINGS.colors.blackboardVideo}`)}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover", // 枠いっぱいに広げる
-            }}
-            loop
-            muted // 背景動画として音は消す（必要ならBGMや音声と被るのを防ぐ）
-          />
-        ) : "blackboardImage" in SETTINGS.colors && SETTINGS.colors.blackboardImage ? (
-          <Img
-            src={staticFile(`images/${SETTINGS.colors.blackboardImage}`)}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover", // 枠いっぱいに広げる
-            }}
-          />
+        {sceneInfo.backgroundImage ? (
+          sceneInfo.backgroundImage.endsWith(".mp4") ? (
+            <Video
+              src={staticFile(`images/${sceneInfo.backgroundImage}`)}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+              loop
+              muted
+            />
+          ) : (
+            <Img
+              src={staticFile(`images/${sceneInfo.backgroundImage}`)}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          )
         ) : null}
       </div>
+
       {/* 黒板の茶色フチ（下部） */}
       <div
         style={{

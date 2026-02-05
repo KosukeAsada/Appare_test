@@ -13,12 +13,13 @@
 import * as fs from "fs";
 import * as path from "path";
 import { execSync } from "child_process";
+import * as yaml from "yaml";
 
 const ROOT_DIR = process.cwd();
 
 // 設定読み込み
 const CONFIG_PATH = path.join(ROOT_DIR, "src/config.ts");
-const SCRIPT_PATH = path.join(ROOT_DIR, "src/data/script.ts");
+const SCRIPT_YAML_PATH = path.join(ROOT_DIR, "config", "script.yaml"); // YAMLを読む
 const OUTPUT_DIR = path.join(ROOT_DIR, "public/voices");
 
 interface VoiceGenerationConfig {
@@ -131,41 +132,25 @@ async function main() {
     ["gaoyan", 2],
   ]);
 
-  // script.tsを読み込んでパース
-  const scriptContent = fs.readFileSync(SCRIPT_PATH, "utf-8");
-  const scriptDataMatch = scriptContent.match(
-    /export const scriptData[^=]*=\s*\[([\s\S]*?)\];/
-  );
+  // 読み込みロジック（既存コードを削除）
 
-  if (scriptDataMatch) {
-    const dataStr = scriptDataMatch[1].trim();
-    // 簡易的なJSON化（末尾カンマの除去など）
-    try {
-      // JSON形式としてパースを試みる
-      const jsonStr = "[" + dataStr.replace(/,\s*$/, "").replace(/,\s*]/, "]") + "]";
-      const parsedData = JSON.parse(jsonStr);
-      for (const line of parsedData) {
-        scriptData.push({
-          id: line.id,
-          character: line.character,
-          text: line.text,
-          voiceFile: line.voiceFile,
-        });
-      }
-    } catch (e) {
-      console.warn("JSON.parse failed, falling back to regex parser...");
-      const lineMatches = dataStr.matchAll(
-        /\{\s*"?id"?:\s*(\d+),\s*"?character"?:\s*"([^"]+)",\s*"?text"?:\s*"([^"]+)"[\s\S]*?"?voiceFile"?:\s*"([^"]+)"/g
-      );
+  // script.yamlを読み込んでパース
+  console.log(`📖 Reading script from: ${SCRIPT_YAML_PATH}`);
+  const scriptContent = fs.readFileSync(SCRIPT_YAML_PATH, "utf-8");
+  const parsedData = yaml.parse(scriptContent) as any[];
 
-      for (const match of lineMatches) {
-        scriptData.push({
-          id: parseInt(match[1]),
-          character: match[2],
-          text: match[3],
-          voiceFile: match[4],
-        });
-      }
+  if (Array.isArray(parsedData)) {
+    for (const line of parsedData) {
+      // voiceFile名を自動生成（sync-scriptと同じロジックにする）
+      // idが数値であることを前提
+      const voiceFile = `${String(line.id).padStart(2, "0")}_${line.character}.wav`;
+
+      scriptData.push({
+        id: line.id,
+        character: line.character,
+        text: line.text,
+        voiceFile: voiceFile,
+      });
     }
   }
 
